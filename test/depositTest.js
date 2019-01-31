@@ -3,7 +3,7 @@ const ethers = require('ethers');
 const Deposit = require('../build/Deposit.json');
 
 
-describe('Example', () => {
+describe('Deposit', () => {
 	let deployer;
 	let depositInstance;
 	let Ivan;
@@ -11,15 +11,15 @@ describe('Example', () => {
 	let Silviya;
 	let Maria;
 	let rewardForUser;
-	let initialDepositsBalance
+	let initialDepositsBalance;
 
 	const defaultOverrides = {
 		gasPrice: 20000000000,
 		gasLimit: 4700000,
-	}
+	};
 
 	before(async () => {
-		initialDepositsBalance = ethers.utils.bigNumberify('4000000000000000000')
+		initialDepositsBalance = ethers.utils.bigNumberify('4000000000000000000');
 		deployer = new etherlime.EtherlimeGanacheDeployer();
 
 		depositInstance = await deployer.deploy(Deposit, false, { value: initialDepositsBalance });
@@ -35,41 +35,40 @@ describe('Example', () => {
 		const txIvan = await depositInstance.from(Ivan);
 		await txIvan.enroll();
 		const ivanBalance = await txIvan.balance();
-		assert.deepEqual(ivanBalance, rewardForUser, "initial balance is incorrect");
+		assert.deepStrictEqual(ivanBalance, rewardForUser, "initial balance is incorrect");
 
 		const txGeorge = await depositInstance.from(George);
 		await txGeorge.enroll();
 		const georgeBalance = await txGeorge.balance();
-		assert.deepEqual(georgeBalance, rewardForUser, "initial balance is incorrect");
+		assert.deepStrictEqual(georgeBalance, rewardForUser, "initial balance is incorrect");
 
 		const txSilviya = await depositInstance.from(Silviya);
 		await txSilviya.enroll();
 		const silviyaBalance = await txSilviya.balance();
-		assert.deepEqual(silviyaBalance, rewardForUser, "initial balance is incorrect");
+		assert.deepStrictEqual(silviyaBalance, rewardForUser, "initial balance is incorrect");
 
 		const txMaria = await depositInstance.from(Maria);
 		await txMaria.enroll();
 		const mariaBalance = await txMaria.balance();
-		assert.notDeepEqual(mariaBalance, rewardForUser, "initial balance is incorrect");
+		assert.notDeepStrictEqual(mariaBalance, rewardForUser, "initial balance is incorrect");
 
 		const depositsBalance = await depositInstance.depositsBalance();
-		assert.deepEqual(depositsBalance, initialDepositsBalance);
+		assert.deepStrictEqual(depositsBalance, initialDepositsBalance);
 	});
 
 	it("should deposit correct amount", async () => {
 
-		const deposit = ethers.utils.bigNumberify('2000000000000000000')
+		const deposit = ethers.utils.bigNumberify('2000000000000000000');
 
 		const txIvan = await depositInstance.from(Ivan);
-		await txIvan.deposit({ value: deposit })
+		await txIvan.deposit({ value: deposit });
 
 		const balance = await txIvan.balance();
-		assert.deepEqual(balance, deposit.add(rewardForUser), "deposit amount incorrect, check deposit method");
+		assert.deepStrictEqual(balance, deposit, "deposit amount incorrect, check deposit method");
 
 		const depositBalance = await depositInstance.depositsBalance();
 
-		assert.deepEqual(depositBalance, initialDepositsBalance.add(deposit));
-
+		assert.deepStrictEqual(depositBalance, initialDepositsBalance.add(deposit));
 	});
 
 	it("Should proper withdraw", async () => {
@@ -81,7 +80,7 @@ describe('Example', () => {
 		const balanceAfterDeposit = await txIvan.balance();
 		await txIvan.withdraw(deposit, defaultOverrides);
 		const balance = await txIvan.balance();
-		assert.deepEqual(balance, balanceAfterDeposit.sub(deposit), "withdraw amount incorrect");
+		assert.deepStrictEqual(balance, balanceAfterDeposit.sub(deposit), "withdraw amount incorrect");
 	});
 
 	it("Should keep balance the same if we try to withdraw more than the account balance", async () => {
@@ -94,6 +93,6 @@ describe('Example', () => {
 		const balanceAfterDeposit = await txIvan.balance();
 		await txIvan.withdraw(amountToWithdraw, defaultOverrides);
 		const balance = await txIvan.balance();
-		assert.deepEqual(balance, balanceAfterDeposit, "balance should be keep the same");
+		assert.deepStrictEqual(balance, balanceAfterDeposit, "balance should be keep the same");
 	});
 });
