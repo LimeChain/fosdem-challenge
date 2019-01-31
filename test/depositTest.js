@@ -64,6 +64,8 @@ describe('Deposit', () => {
 		await txIvan.deposit({ value: deposit });
 
 		const balance = await txIvan.balance();
+
+		//Hint: Should check for difference in deposit after the enroll method is executed!
 		assert.deepStrictEqual(balance, deposit, "deposit amount incorrect, check deposit method");
 
 		const depositBalance = await depositInstance.depositsBalance();
