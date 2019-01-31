@@ -8,7 +8,7 @@ contract Deposit {
   // Log the event about a deposit being made by an address and its amount
     event LogDepositMade(address indexed accountAddress, uint amount);
 
-    // Constructor is "payable" so it can receive the initial funding of 30, 
+    // Constructor is "payable" so it can receive the initial funding of 3, 
     // required to reward the first 3 clients
     constructor() public payable {
         require(msg.value >= 3 ether, "3 ether initial funding required");
